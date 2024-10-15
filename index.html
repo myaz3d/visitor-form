@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visitor Data Entry Form</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Visitor Data Entry Form</h2>
+
+        <div class="form-header">
+            <label for="entryPoint">Immigration Point of Entry:</label>
+            <select id="entryPoint">
+                <option value="">--Select Point of Entry--</option>
+                <option value="airport">Airport</option>
+                <option value="seaport">Seaport</option>
+                <option value="land">Land Border</option>
+            </select>
+
+            <label for="week">Week:</label>
+            <select id="week">
+                <option value="">--Select Week--</option>
+            </select>
+        </div>
+
+        <table id="visitorTable">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Country</th>
+                    <th>Domestic Male</th>
+                    <th>Domestic Female</th>
+                    <th>Total Domestic</th>
+                    <th>International Male</th>
+                    <th>International Female</th>
+                    <th>Total International</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Default 5 rows -->
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2"><strong>Grand Total</strong></td>
+                    <td id="grandTotalMale">0</td>
+                    <td id="grandTotalFemale">0</td>
+                    <td id="grandDomesticTotal">0</td>
+                    <td></td>
+                    <td></td>
+                    <td id="grandInternationalTotal">0</td>
+                </tr>
+                <tr>
+                    <td colspan="7"><strong>Overall Grand Total:</strong></td>
+                    <td id="overallGrandTotal">0</td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <div class="form-footer">
+            <input type="number" id="rowCount" value="1" min="1" class="row-input">
+            <button id="addRow">Add Country Row(s)</button>
+            <button id="reset" class="red-button">Reset</button>
+            <button id="submit" class="green-button">Submit</button>
+        </div>
+    </div>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
