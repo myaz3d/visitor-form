@@ -75,14 +75,13 @@ function calculateGrandTotals() {
 function addRow() {
     const rowCount = parseInt(document.getElementById('rowCount').value) || 1;
     const tbody = document.querySelector('#visitorTable tbody');
-    const currentRowCount = tbody.rows.length;
-
+    
     for (let i = 0; i < rowCount; i++) {
         const newRow = document.createElement('tr');
-        const rowNumber = currentRowCount + i + 1;
+        const rowIndex = tbody.querySelectorAll('tr').length + 1;
 
         newRow.innerHTML = `
-            <td>${rowNumber}</td>
+            <td>${rowIndex}</td>
             <td>
                 <select class="country"></select>
             </td>
@@ -93,6 +92,7 @@ function addRow() {
             <td><input type="number" class="international-female" oninput="updateTotals(this)" min="0"></td>
             <td class="international-total">0</td>
         `;
+
         tbody.appendChild(newRow);
     }
 
@@ -105,17 +105,51 @@ document.getElementById('addRow').addEventListener('click', function() {
 });
 
 document.getElementById('reset').addEventListener('click', function() {
-    const tbody = document.querySelector('#visitorTable tbody');
-    tbody.innerHTML = ''; // Clear all rows
-    for (let i = 0; i < 5; i++) { // Add default 5 rows
-        addRow();
-    }
-    document.getElementById('rowCount').value = 1; // Reset row count input
-    calculateGrandTotals(); // Reset totals
+    location.reload(); // Reload the page to reset the form
 });
 
-document.getElementById('submit').addEventListener('click', function() {
-    alert('Form submitted!');
+document.getElementById('submit').addEventListener('click', async function() {
+    const entryPoint = document.getElementById('entryPoint').value;
+    const week = document.getElementById('week').value;
+
+    const countryRows = [];
+    document.querySelectorAll('#visitorTable tbody tr').forEach(row => {
+        const country = row.querySelector('.country').value;
+        const domesticMale = parseInt(row.querySelector('.domestic-male').value) || 0;
+        const domesticFemale = parseInt(row.querySelector('.domestic-female').value) || 0;
+        const internationalMale = parseInt(row.querySelector('.international-male').value) || 0;
+        const internationalFemale = parseInt(row.querySelector('.international-female').value) || 0;
+
+        countryRows.push({
+            country,
+            domesticMale,
+            domesticFemale,
+            internationalMale,
+            internationalFemale
+        });
+    });
+
+    const formData = {
+        entryPoint,
+        week,
+        countryRows
+    };
+
+    // Send the form data to the Google Apps Script Web App
+    const response = await fetch('https://script.google.com/macros/s/AKfycbydMs8qpXd8MPXONCw9E7sBinusuYtmnSnUMJxHlXqsgFMiHrSHVSHHyzrxzBfIt97OWg/exec', {
+        method: 'POST',
+        body: JSON.stringify(formData),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    const result = await response.json();
+    if (result.status === 'success') {
+        alert('Form submitted successfully!');
+    } else {
+        alert('Form submission failed.');
+    }
 });
 
 window.onload = function() {
